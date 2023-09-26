@@ -1,5 +1,5 @@
-from twisted.internet import protocol, reactor
 from twisted.internet.endpoints import TCP4ServerEndpoint
+from twisted.internet import protocol, reactor
 from twisted.internet.protocol import ServerFactory as ServFactory
 
 
@@ -7,6 +7,13 @@ class Server(protocol.Protocol):
     def __init__(self, clients):
         super(Server, self).__init__()
         self.clients = clients
+
+    def connectionLost(self, reason):
+        print(reason)
+        self.clients.remove(self)
+
+    def connectionMade(self):
+        self.clients.add(self)
         print(self.clients)
 
     def dataReceived(self, data):
